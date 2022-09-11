@@ -159,7 +159,7 @@ class MessageService
      * @param $to (whatapp number  - no spaces or = )
      * @param $placeholders array (of placeholders)
      * @param $template string (template name)
-     * @param $language languale (ie en, must match the language of the approved template)
+     * @param $language string (ie en, must match the language of the approved template)
      * @param $namespace  string (template namespace  - you can get this from the getTemplates api)
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
@@ -203,7 +203,7 @@ class MessageService
     public function sendWhatsAppText($to, $message)
     {
         $payload = [
-            "to" => $to,
+            "to" => '923241494612',
             "type" => "text",
             "text" => ["body" => $message]
 

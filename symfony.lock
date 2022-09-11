@@ -13,6 +13,9 @@
             "src/Entity/.gitignore"
         ]
     },
+    "darkaonline/ripcord": {
+        "version": "v0.1.8"
+    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -150,6 +153,9 @@
     },
     "phpstan/phpdoc-parser": {
         "version": "1.2.0"
+    },
+    "phpxmlrpc/phpxmlrpc": {
+        "version": "4.8.0"
     },
     "psr/cache": {
         "version": "3.0.0"
@@ -414,6 +420,9 @@
     },
     "symfony/yaml": {
         "version": "v6.0.3"
+    },
+    "tbondois/odoo-ripcord": {
+        "version": "1.5.1"
     },
     "twig/twig": {
         "version": "v3.3.8"
