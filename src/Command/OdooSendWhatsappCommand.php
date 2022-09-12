@@ -59,7 +59,7 @@ class OdooSendWhatsappCommand extends Command
                     $odooBusiness->getApiKey()
                 );
 
-                $contacts = $client->search_read('res.partner', [], ['name', 'phone']);
+                $contacts = $client->search_read('res.partner', [['write_date', '>', date('Y-m-d H:i:s', strtotime('-1 week'))]], ['name', 'phone', 'write_date']);
 
                 if ($contacts) {
                     foreach ($contacts as $contact) {
