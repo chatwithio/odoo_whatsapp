@@ -63,7 +63,7 @@ class OdooSendWhatsappCommand extends Command
                 if ($contacts) {
                     foreach ($contacts as $contact) {
                         if (!empty($contact['phone'])) {
-                            $this->odooContactRepository->save($odooBusiness, $contact['name'], $contact['phone']);
+                            $this->odooContactRepository->save($odooBusiness->getId(), $contact['name'], $contact['phone']);
 
                             /*$this->messageService->sendWhatsApp($contact['phone'], [], $_ENV['WHATSAPP_TEMPLATE_NAME'], 'en', $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']);
 

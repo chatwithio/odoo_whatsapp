@@ -21,8 +21,7 @@ class OdooContact
     private string $phone;
 
     #[ORM\Column(name: 'odoo_business_id', type: 'string', length: 50)]
-    #[ORM\ManyToOne(targetEntity: 'OdooBusiness', inversedBy: 'odoo_contact')]
-    private OdooBusiness $odooBusiness;
+    private int $odooBusinessId;
 
     public function getId(): ?int
     {
@@ -49,13 +48,13 @@ class OdooContact
         $this->phone = $phone;
     }
 
-    public function getOdooBusiness(): OdooBusiness
+    public function getOdooBusiness(): int
     {
-        return $this->odooBusiness;
+        return $this->odooBusinessId;
     }
 
-    public function setOdooBusiness(OdooBusiness $odooBusiness): void
+    public function setOdooBusinessId(int $odooBusinessId): void
     {
-        $this->odooBusiness = $odooBusiness;
+        $this->odooBusinessId = $odooBusinessId;
     }
 }

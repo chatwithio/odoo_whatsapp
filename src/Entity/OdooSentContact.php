@@ -15,9 +15,7 @@ class OdooSentContact
     private int $id;
 
     #[ORM\Column(name: 'odoo_contact_id', length: 50)]
-    #[ORM\OneToOne(inversedBy: 'odoo_sent_contact', targetEntity: 'OdooContact')]
-    #[ORM\JoinColumn(name: 'odoo_contact_id', referencedColumnName: 'id', nullable: false)]
-    private OdooContact $odooContact;
+    private int $odooContactId;
 
     #[ORM\Column(type: 'string')]
     private string $message;
@@ -27,14 +25,14 @@ class OdooSentContact
         return $this->id;
     }
 
-    public function getOdooContact(): OdooContact
+    public function getOdooContactId(): int
     {
-        return $this->odooContact;
+        return $this->odooContactId;
     }
 
-    public function setOdooContact(OdooContact $odooContact): void
+    public function setOdooContactId(int $odooContactId): void
     {
-        $this->odooContact = $odooContact;
+        $this->odooContactId = $odooContactId;
     }
 
     public function getMessage(): string

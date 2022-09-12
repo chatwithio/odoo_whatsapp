@@ -20,7 +20,7 @@ class OdooContactRepository extends ServiceEntityRepository
         parent::__construct($registry, OdooContact::class);
     }
 
-    public function save(OdooBusiness $odooBusiness, string $name, string $phone)
+    public function save(int $odooBusinessId, string $name, string $phone)
     {
         $entityManager = $this->getEntityManager();
 
@@ -30,7 +30,7 @@ class OdooContactRepository extends ServiceEntityRepository
             $odooContact = new OdooContact();
         }
 
-        $odooContact->setOdooBusiness($odooBusiness);
+        $odooContact->setOdooBusinessId($odooBusinessId);
         $odooContact->setName($name);
         $odooContact->setPhone($phone);
 
