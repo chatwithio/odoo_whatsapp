@@ -2,59 +2,102 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\OdooContactRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OdooContactRepository::class)]
-#[ORM\Table(name: '`odoo_contact`')]
+#[ApiResource]
 class OdooContact
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private int $id;
+    #[ORM\Column]
+    private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $name;
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $phone;
+    #[ORM\Column(length: 255)]
+    private ?string $phone = null;
 
-    #[ORM\Column(name: 'odoo_business_id', type: 'string', length: 50)]
-    private int $odooBusinessId;
+    #[ORM\Column]
+    private ?int $odoo_id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'odooContacts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?OdooBusiness $odooBusiness = null;
+
+    #[ORM\OneToOne(mappedBy: 'odooContacts', cascade: ['persist', 'remove'])]
+    private ?OdooSentContact $odooSentContact = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName($name): void
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function setPhone(string $phone): void
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
     }
 
-    public function getOdooBusiness(): int
+    public function getOdooId(): ?int
     {
-        return $this->odooBusinessId;
+        return $this->odoo_id;
     }
 
-    public function setOdooBusinessId(int $odooBusinessId): void
+    public function setOdooId(int $odoo_id): self
     {
-        $this->odooBusinessId = $odooBusinessId;
+        $this->odoo_id = $odoo_id;
+
+        return $this;
+    }
+
+    public function getOdooBusiness(): ?OdooBusiness
+    {
+        return $this->odooBusiness;
+    }
+
+    public function setOdooBusiness(?OdooBusiness $odooBusiness): self
+    {
+        $this->odooBusiness = $odooBusiness;
+
+        return $this;
+    }
+
+    public function getOdooSentContact(): ?OdooSentContact
+    {
+        return $this->odooSentContact;
+    }
+
+    public function setOdooSentContact(OdooSentContact $odooSentContact): self
+    {
+        // set the owning side of the relation if necessary
+        if ($odooSentContact->getOdooContacts() !== $this) {
+            $odooSentContact->setOdooContacts($this);
+        }
+
+        $this->odooSentContact = $odooSentContact;
+
+        return $this;
     }
 }

@@ -2,12 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\OdooBusiness;
 use App\Entity\OdooContact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<OdooContact>
+ *
  * @method OdooContact|null find($id, $lockMode = null, $lockVersion = null)
  * @method OdooContact|null findOneBy(array $criteria, array $orderBy = null)
  * @method OdooContact[]    findAll()
@@ -20,21 +21,46 @@ class OdooContactRepository extends ServiceEntityRepository
         parent::__construct($registry, OdooContact::class);
     }
 
-    public function save(int $odooBusinessId, string $name, string $phone)
+    public function add(OdooContact $entity, bool $flush = false): void
     {
-        $entityManager = $this->getEntityManager();
+        $this->getEntityManager()->persist($entity);
 
-        $odooContact = $this->findOneBy(['phone' => $phone]);
-
-        if (!$odooContact) {
-            $odooContact = new OdooContact();
+        if ($flush) {
+            $this->getEntityManager()->flush();
         }
-
-        $odooContact->setOdooBusinessId($odooBusinessId);
-        $odooContact->setName($name);
-        $odooContact->setPhone($phone);
-
-        $entityManager->persist($odooContact);
-        $entityManager->flush();
     }
+
+    public function remove(OdooContact $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+//    /**
+//     * @return OdooContact[] Returns an array of OdooContact objects
+//     */
+//    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('o')
+//            ->andWhere('o.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('o.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+//    public function findOneBySomeField($value): ?OdooContact
+//    {
+//        return $this->createQueryBuilder('o')
+//            ->andWhere('o.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
 }

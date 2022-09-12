@@ -23,7 +23,7 @@ final class Version20220910113744 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE "odoo_business_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE odoo_business (id INT NOT NULL, host VARCHAR(50) NOT NULL, db VARCHAR(50) NOT NULL, name VARCHAR(50) NOT NULL, api_key VARCHAR(100) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE SEQUENCE "odoo_contact_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE odoo_contact (id INT NOT NULL, odoo_business_id INT NOT NULL, name VARCHAR(50) NOT NULL, phone VARCHAR(50) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE odoo_contact (id INT NOT NULL, odoo_business_id INT NOT NULL, name VARCHAR(50) NOT NULL, phone VARCHAR(50) NOT NULL, odoo_id INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE SEQUENCE "odoo_sent_contact_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE odoo_sent_contact (id INT NOT NULL, odoo_contact_id INT NOT NULL, message TEXT NOT NULL, PRIMARY KEY(id))');
 
