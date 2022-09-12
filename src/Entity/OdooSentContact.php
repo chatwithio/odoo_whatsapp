@@ -18,7 +18,7 @@ class OdooSentContact
 
     #[ORM\OneToOne(inversedBy: 'odooSentContact', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?OdooContact $odooContacts = null;
+    private ?OdooContact $odooContact = null;
 
     public function getId(): ?int
     {
@@ -37,14 +37,14 @@ class OdooSentContact
         return $this;
     }
 
-    public function getOdooContacts(): ?OdooContact
+    public function getOdooContact(): ?OdooContact
     {
-        return $this->odooContacts;
+        return $this->odooContact;
     }
 
-    public function setOdooContacts(OdooContact $odooContacts): self
+    public function setOdooContact(OdooContact $odooContact): self
     {
-        $this->odooContacts = $odooContacts;
+        $this->odooContact = $odooContact;
 
         return $this;
     }

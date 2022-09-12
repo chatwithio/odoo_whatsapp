@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\OdooContact;
 use App\Repository\OdooBusinessRepository;
 use App\Repository\OdooContactRepository;
 use App\Repository\OdooSentContactRepository;
@@ -63,7 +64,18 @@ class OdooSendWhatsappCommand extends Command
                 if ($contacts) {
                     foreach ($contacts as $contact) {
                         if (!empty($contact['phone'])) {
-                            $this->odooContactRepository->save($odooBusiness->getId(), $contact['name'], $contact['phone']);
+                            $odooContact = $this->odooContactRepository->findOneBy(['odoo_id' => $contact['id']]);
+
+                            if (!$odooContact) {
+                                $odooContact = new OdooContact();
+                            }
+
+                            $odooContact->setOdooBusiness($odooBusiness);
+                            $odooContact->setOdooId($contact['id']);
+                            $odooContact->setName($contact['name']);
+                            $odooContact->setPhone($contact['phone']);
+
+                            $this->odooContactRepository->add($odooContact, true);
 
                             /*$this->messageService->sendWhatsApp($contact['phone'], [], $_ENV['WHATSAPP_TEMPLATE_NAME'], 'en', $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']);
 

@@ -27,14 +27,6 @@ class OdooBusiness
     #[ORM\Column(length: 255)]
     private ?string $api_key = null;
 
-    #[ORM\OneToMany(mappedBy: 'odooBusiness', targetEntity: OdooContact::class)]
-    private Collection $odooContacts;
-
-    public function __construct()
-    {
-        $this->odooContacts = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -84,36 +76,6 @@ class OdooBusiness
     public function setApiKey(string $api_key): self
     {
         $this->api_key = $api_key;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, OdooContact>
-     */
-    public function getOdooContacts(): Collection
-    {
-        return $this->odooContacts;
-    }
-
-    public function addOdooContact(OdooContact $odooContact): self
-    {
-        if (!$this->odooContacts->contains($odooContact)) {
-            $this->odooContacts->add($odooContact);
-            $odooContact->setOdooBusiness($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOdooContact(OdooContact $odooContact): self
-    {
-        if ($this->odooContacts->removeElement($odooContact)) {
-            // set the owning side to null (unless already changed)
-            if ($odooContact->getOdooBusiness() === $this) {
-                $odooContact->setOdooBusiness(null);
-            }
-        }
 
         return $this;
     }

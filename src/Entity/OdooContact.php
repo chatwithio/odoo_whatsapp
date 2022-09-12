@@ -24,11 +24,11 @@ class OdooContact
     #[ORM\Column]
     private ?int $odoo_id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'odooContacts')]
+    #[ORM\ManyToOne(inversedBy: 'odooContact')]
     #[ORM\JoinColumn(nullable: false)]
     private ?OdooBusiness $odooBusiness = null;
 
-    #[ORM\OneToOne(mappedBy: 'odooContacts', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'odooContact', cascade: ['persist', 'remove'])]
     private ?OdooSentContact $odooSentContact = null;
 
     public function getId(): ?int
@@ -92,8 +92,8 @@ class OdooContact
     public function setOdooSentContact(OdooSentContact $odooSentContact): self
     {
         // set the owning side of the relation if necessary
-        if ($odooSentContact->getOdooContacts() !== $this) {
-            $odooSentContact->setOdooContacts($this);
+        if ($odooSentContact->getOdooContact() !== $this) {
+            $odooSentContact->setOdooContact($this);
         }
 
         $this->odooSentContact = $odooSentContact;
