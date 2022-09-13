@@ -64,7 +64,11 @@ class OdooSendWhatsappCommand extends Command
                     $odooBusiness->getApiKey()
                 );
 
-                $contacts = $client->search_read('res.partner', [['write_date', '>', date('Y-m-d H:i:s', strtotime('-1 week'))]], ['name', 'mobile', 'write_date']);
+                $contacts = $client->search_read(
+                    'res.partner',
+                    [['write_date', '>', date('Y-m-d H:i:s', strtotime('-1 week'))]],
+                    ['name', 'mobile', 'write_date']
+                );
 
                 if ($contacts) {
                     foreach ($contacts as $contact) {
@@ -82,26 +86,38 @@ class OdooSendWhatsappCommand extends Command
                             $odooContact->setPhone($mobile);
 
                             $this->odooContactRepository->add($odooContact, true);
-
-                            $response = $this->messageService->sendWhatsApp(
-                                $mobile,
-                                ['name' => $odooContact->getName()],
-                                $_ENV['WHATSAPP_TEMPLATE_NAME'],
-                                'en',
-                                $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
+                            $odooSentContact = $this->odooSentContactRepository->findOneBy(
+                                ['odooContact' => $odooContact]
                             );
 
-                            if ($response) {
-                                $this->bus->dispatch(new WhatsappNotification('Whatsapp me!'));
-                                $io->success('Message has been sent successfully to ' . $odooContact->getName() . ' (' . $mobile . ')');
+                            if (!$odooSentContact) {
+                                $response = $this->messageService->sendWhatsApp(
+                                    $mobile,
+                                    ['name' => $odooContact->getName()],
+                                    $_ENV['WHATSAPP_TEMPLATE_NAME'],
+                                    'en',
+                                    $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
+                                );
 
-                                $odooSentContact = new OdooSentContact();
-                                $odooSentContact->setMessage($response->messages[0]->id);
-                                $odooSentContact->setOdooContact($odooContact);
+                                if ($response) {
+                                    $this->bus->dispatch(new WhatsappNotification('Whatsapp me!'));
+                                    $io->success(
+                                        'Message has been sent successfully to ' . $odooContact->getName(
+                                        ) . ' (' . $mobile . ')'
+                                    );
+                                    $odooSentContact = new OdooSentContact();
+                                    $odooSentContact->setOdooContact($odooContact);
+                                    $odooSentContact->setMessage($response->messages[0]->id);
 
-                                $this->odooSentContactRepository->add($odooSentContact, true);
+                                    $this->odooSentContactRepository->add($odooSentContact, true);
+                                } else {
+                                    $io->error(
+                                        'Message has was not sent successfully to ' . $odooContact->getName(
+                                        ) . ' (' . $mobile . ')'
+                                    );
+                                }
                             } else {
-                                $io->error('Message has was not sent successfully to ' . $odooContact->getName() . ' (' . $mobile . ')');
+                                $io->warning('Already sent SMS to ' . $odooContact->getName() . ' (' . $mobile . ')');
                             }
                         }
                     }
