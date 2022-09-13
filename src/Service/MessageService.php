@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Exception;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class MessageService
@@ -95,7 +96,7 @@ class MessageService
                 if ($request->getStatusCode() == 200 || $request->getStatusCode() == 201) {
                     return json_decode($request->getContent());
                 } else {
-                    throw new Exception($request->getBody()->getContents());
+                    throw new Exception($request->getStatusCode());
                 }
             } else {
                 throw new Exception('Unvalidated payload Exception');

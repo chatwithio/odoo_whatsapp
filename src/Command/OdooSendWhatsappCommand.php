@@ -3,11 +3,16 @@
 namespace App\Command;
 
 use App\Entity\OdooContact;
+use App\Entity\OdooSentContact;
+use App\Message\WhatsappNotification;
 use App\Repository\OdooBusinessRepository;
 use App\Repository\OdooContactRepository;
 use App\Repository\OdooSentContactRepository;
 use App\Service\MessageService;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumberUtil;
 use Ripoo\OdooClient;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -59,11 +64,12 @@ class OdooSendWhatsappCommand extends Command
                     $odooBusiness->getApiKey()
                 );
 
-                $contacts = $client->search_read('res.partner', [['write_date', '>', date('Y-m-d H:i:s', strtotime('-1 week'))]], ['name', 'phone', 'write_date']);
+                $contacts = $client->search_read('res.partner', [['write_date', '>', date('Y-m-d H:i:s', strtotime('-1 week'))]], ['name', 'mobile', 'write_date']);
 
                 if ($contacts) {
                     foreach ($contacts as $contact) {
-                        if (!empty($contact['phone'])) {
+                        if (!empty($contact['mobile'])) {
+                            $mobile = $this->getMobileNumberWithCode($contact['mobile']);
                             $odooContact = $this->odooContactRepository->findOneBy(['odoo_id' => $contact['id']]);
 
                             if (!$odooContact) {
@@ -73,15 +79,30 @@ class OdooSendWhatsappCommand extends Command
                             $odooContact->setOdooBusiness($odooBusiness);
                             $odooContact->setOdooId($contact['id']);
                             $odooContact->setName($contact['name']);
-                            $odooContact->setPhone($contact['phone']);
+                            $odooContact->setPhone($mobile);
 
                             $this->odooContactRepository->add($odooContact, true);
 
-                            /*$this->messageService->sendWhatsApp($contact['phone'], [], $_ENV['WHATSAPP_TEMPLATE_NAME'], 'en', $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']);
+                            $response = $this->messageService->sendWhatsApp(
+                                $mobile,
+                                ['name' => $odooContact->getName()],
+                                $_ENV['WHATSAPP_TEMPLATE_NAME'],
+                                'en',
+                                $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
+                            );
 
-                            $this->bus->dispatch(new WhatsappNotification('Whatsapp me!'));
+                            if ($response) {
+                                $this->bus->dispatch(new WhatsappNotification('Whatsapp me!'));
+                                $io->success('Message has been sent successfully to ' . $odooContact->getName() . ' (' . $mobile . ')');
 
-                            $io->success('Message has been sent Successfully');*/
+                                $odooSentContact = new OdooSentContact();
+                                $odooSentContact->setMessage($response->messages[0]->id);
+                                $odooSentContact->setOdooContact($odooContact);
+
+                                $this->odooSentContactRepository->add($odooSentContact, true);
+                            } else {
+                                $io->error('Message has was not sent successfully to ' . $odooContact->getName() . ' (' . $mobile . ')');
+                            }
                         }
                     }
                 }
@@ -93,5 +114,13 @@ class OdooSendWhatsappCommand extends Command
 
             return Command::FAILURE;
         }
+    }
+
+    private function getMobileNumberWithCode($mobile): string
+    {
+        $phoneNumberUtil = PhoneNumberUtil::getInstance();
+        $phoneNumberObject = $phoneNumberUtil->parse($mobile, 'ES');
+
+        return $phoneNumberObject->getCountryCode() . $phoneNumberObject->getNationalNumber();
     }
 }
