@@ -95,7 +95,7 @@ class OdooSendWhatsappCommand extends Command
                                     $mobile,
                                     ['name' => $odooContact->getName()],
                                     $_ENV['WHATSAPP_TEMPLATE_NAME'],
-                                    'en',
+                                    $_ENV['WHATSAPP_TEMPLATE_LANGUAGE'],
                                     $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
                                 );
 

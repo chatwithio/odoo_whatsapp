@@ -1,43 +1,49 @@
-# Symfony Docker with Whatapp Api
+# Rent a Car (Whatsapp API)
 
+## Installation
 
-## Whatsapp API 
+The project is build on Symfony 6 and the PHP version of the language being used is PHP 8.1. Install symfony on your
+local machine
 
-There are detailed video in [indepth.webm](indepth.webm) and [intro.webd](intro.webd). This is definitely the best way to get understand it.
+- ### Run the following command in order to set up the project
 
+```bash
+# Install dependencies
+composer update
+# or
+composer install
 
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+# Migrate 
+php bin/console doctrine:migrations:migrate
 
-## Getting Started
+# Run Server
+symfony server:start -d
 
-1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/)
-2. Run `docker-compose build --pull --no-cache` to build fresh images
-3. Run `docker-compose up` (the logs will be displayed in the current shell)
-4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
-5. Run `docker-compose down --remove-orphans` to stop the Docker containers.
+# Add and set value in your .env.local for the following environment variables
+WHATSAPP_TEMPLATE_NAME=
+WHATSAPP_TEMPLATE_LANGUAGE=
+WHATSAPP_TEMPLATE_NAMESPACE=
+```
 
-## Features
+- ### Using the odoo business to send the whatsapp message
 
-* Production, development and CI ready
-* Automatic HTTPS (in dev and in prod!)
-* HTTP/2, HTTP/3 and [Preload](https://symfony.com/doc/current/web_link.html) support
-* Built-in [Mercure](https://symfony.com/doc/current/mercure.html) hub
-* [Vulcain](https://vulcain.rocks) support
-* Just 2 services (PHP FPM and Caddy server)
-* Super-readable configuration
+  The business can be saved in the `odoo_business` table. We need the following field in order to save the
+    - Host
+    - Database
+    - Business Name
+    - Api Key
 
-**Enjoy!**
+  You cna get all these field by creating a business on Odoo and going through their developer's documentation.
 
-## Docs
+- ### Getting the contacts and sending the message
+    - We can get the contact lists and instantly send them the Whatsapp Text message according to out template that we
+      want to use to send the message.
+    - You can run this command in order to get the contacts and send them the message if they have not already been sent
+      the message
+      ```
+      php bin/console odoo:send-whatsapp
+      ```
+    - Once the contacts have been retrieved, and the message has been sent, we can see the list of contacts in the
+      `odoo_contact` table and list of recipients from those contacts can been seen `odoo_sent_contact` table. 
 
-1. [Build options](docs/build.md)
-2. [Using Symfony Docker with an existing project](docs/existing-project.md)
-3. [Support for extra services](docs/extra-services.md)
-4. [Deploying in production](docs/production.md)
-5. [Installing Xdebug](docs/xdebug.md)
-6. [Using a Makefile](docs/makefile.md)
-7. [Troubleshooting](docs/troubleshooting.md)
-
-## Credits
-
-Created by [Kévin Dunglas](https://dunglas.fr), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+GOOD LUCK :)
