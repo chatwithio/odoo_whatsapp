@@ -1,4 +1,4 @@
-# Rent a Car (Whatsapp API)
+# Odoo (Whatsapp API)
 
 ## Installation
 
