@@ -33,7 +33,7 @@ WHATSAPP_TEMPLATE_NAMESPACE=
     - Business Name
     - Api Key
 
-  You cna get all these field by creating a business on Odoo and going through their developer's documentation.
+  You can get all these field by creating a business on Odoo and going through their developer's documentation.
 
 - ### Getting the contacts and sending the message
     - We can get the contact lists and instantly send them the Whatsapp Text message according to out template that we
