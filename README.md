@@ -46,4 +46,4 @@ WHATSAPP_TEMPLATE_NAMESPACE=
     - Once the contacts have been retrieved, and the message has been sent, we can see the list of contacts in the
       `odoo_contact` table and list of recipients from those contacts can been seen `odoo_sent_contact` table. 
 
-GOOD LUCK :)
+Create your account at tochat.be and get support and your whatsapp api.
