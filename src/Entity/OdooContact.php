@@ -31,6 +31,9 @@ class OdooContact
     #[ORM\OneToOne(mappedBy: 'odooContact', cascade: ['persist', 'remove'])]
     private ?OdooSentContact $odooSentContact = null;
 
+    #[ORM\Column]
+    private ?string $tag = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -99,5 +102,17 @@ class OdooContact
         $this->odooSentContact = $odooSentContact;
 
         return $this;
+    }
+
+    public function setTag(string $tag): self
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
+
+    public function getTag(): string
+    {
+        return $this->tag;
     }
 }

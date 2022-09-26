@@ -80,6 +80,23 @@ class OdooSendWhatsappCommand extends Command
                                 $odooContact = new OdooContact();
                             }
 
+                            // query to fetch tags
+                            $tag = '';
+
+                            // status has been changed
+                            if ($tag !== $odooContact->getTag()) {
+                                $odooContact->setTag($tag); // update the db
+
+                                // send message status has been update
+                                $response = $this->messageService->sendWhatsApp(
+                                    $mobile,
+                                    [$odooContact->getTag()],
+                                    $_ENV['WHATSAPP_TEMPLATE_STATUS_CHANGED'],
+                                    $_ENV['WHATSAPP_TEMPLATE_LANGUAGE'],
+                                    $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
+                                );
+                            }
+
                             $odooContact->setOdooBusiness($odooBusiness);
                             $odooContact->setOdooId($contact['id']);
                             $odooContact->setName($contact['name']);
