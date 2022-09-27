@@ -76,10 +76,10 @@ class OdooSendWhatsappCommand extends Command
 
                             if (!$odooContact) {
                                 $odooContact = new OdooContact();
-                            }
 
-                            if (!empty($contact['category_id'])) {
-                                $odooContact->setTagId($contact['category_id'][0]);
+                                if (!empty($contact['category_id'])) {
+                                    $odooContact->setTagId($contact['category_id'][0]);
+                                }
                             }
 
                             $odooContact->setOdooBusiness($odooBusiness);
