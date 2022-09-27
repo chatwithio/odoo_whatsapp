@@ -22,7 +22,7 @@ class OdooContact
     private ?string $phone = null;
 
     #[ORM\Column]
-    private ?int $odoo_id = null;
+    private ?int $odooId = null;
 
     #[ORM\ManyToOne(inversedBy: 'odooContact')]
     #[ORM\JoinColumn(nullable: false)]
@@ -32,7 +32,7 @@ class OdooContact
     private ?OdooSentContact $odooSentContact = null;
 
     #[ORM\Column]
-    private ?int $tag_id = null;
+    private ?int $tagId = null;
 
     public function getId(): ?int
     {
@@ -65,12 +65,12 @@ class OdooContact
 
     public function getOdooId(): ?int
     {
-        return $this->odoo_id;
+        return $this->odooId;
     }
 
-    public function setOdooId(int $odoo_id): self
+    public function setOdooId(int $odooId): self
     {
-        $this->odoo_id = $odoo_id;
+        $this->odooId = $odooId;
 
         return $this;
     }
@@ -104,15 +104,15 @@ class OdooContact
         return $this;
     }
 
-    public function setTagId(int $tag_id): self
+    public function setTagId(?int $tagId): self
     {
-        $this->tag_id = $tag_id;
+        $this->tagId = $tagId;
 
         return $this;
     }
 
     public function getTagId(): ?int
     {
-        return $this->tag_id;
+        return $this->tagId;
     }
 }

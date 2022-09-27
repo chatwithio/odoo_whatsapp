@@ -20,15 +20,12 @@ final class Version20220927084930 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE odoo_contact ADD tag_id INT NOT NULL');
-        $this->addSql('ALTER TABLE odoo_contact DROP tag');
+        $this->addSql('ALTER TABLE odoo_contact ADD tag_id INT DEFAULT NULL ');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE odoo_contact ADD tag VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE odoo_contact DROP tag_id');
     }
 }

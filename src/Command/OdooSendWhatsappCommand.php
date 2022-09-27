@@ -72,7 +72,7 @@ class OdooSendWhatsappCommand extends Command
                     foreach ($contacts as $contact) {
                         if (!empty($contact['mobile'])) {
                             $mobile = $this->getMobileNumberWithCode($contact['mobile']);
-                            $odooContact = $this->odooContactRepository->findOneBy(['odoo_id' => $contact['id']]);
+                            $odooContact = $this->odooContactRepository->findOneBy(['odooId' => $contact['id']]);
 
                             if (!$odooContact) {
                                 $odooContact = new OdooContact();
