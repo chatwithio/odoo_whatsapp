@@ -9,9 +9,7 @@ use App\Repository\OdooBusinessRepository;
 use App\Repository\OdooContactRepository;
 use App\Repository\OdooSentContactRepository;
 use App\Service\MessageService;
-use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 use Ripoo\OdooClient;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -67,7 +65,7 @@ class OdooSendWhatsappCommand extends Command
                 $contacts = $client->search_read(
                     'res.partner',
                     [['write_date', '>', date('Y-m-d H:i:s', strtotime('-1 week'))]],
-                    ['name', 'mobile', 'write_date']
+                    ['name', 'mobile', 'write_date', 'category_id']
                 );
 
                 if ($contacts) {
@@ -80,21 +78,39 @@ class OdooSendWhatsappCommand extends Command
                                 $odooContact = new OdooContact();
                             }
 
-                            // query to fetch tags
-                            $tag = '';
+                            $categoryId = $contact['category_id'][0];
 
                             // status has been changed
-                            if ($tag !== $odooContact->getTag()) {
-                                $odooContact->setTag($tag); // update the db
+                            if ($categoryId !== $odooContact->getTagId()) {
+                                // query to fetch tags against the contact
+                                $tag = $client->search_read(
+                                    'res.partner.category',
+                                    [['id', '=', $categoryId]],
+                                    ['name']
+                                );
+
+                                $odooContact->setTagId($categoryId); // update the db
 
                                 // send message status has been update
-                                $response = $this->messageService->sendWhatsApp(
+                                $updateStatusResponse = $this->messageService->sendWhatsApp(
                                     $mobile,
-                                    [$odooContact->getTag()],
-                                    $_ENV['WHATSAPP_TEMPLATE_STATUS_CHANGED'],
+                                    [$tag[0]['name']],
+                                    $_ENV['WHATSAPP_TEMPLATE_ODOO_STATUS'],
                                     $_ENV['WHATSAPP_TEMPLATE_LANGUAGE'],
                                     $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
                                 );
+
+                                if ($updateStatusResponse) {
+                                    $io->success(
+                                        'Update status message has been sent successfully to ' .
+                                        $odooContact->getName() . ' (' . $mobile . ')'
+                                    );
+                                } else {
+                                    $io->error(
+                                        'Update status message has was not sent successfully to '
+                                        . $odooContact->getName() . ' (' . $mobile . ')'
+                                    );
+                                }
                             }
 
                             $odooContact->setOdooBusiness($odooBusiness);

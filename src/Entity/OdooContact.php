@@ -32,7 +32,7 @@ class OdooContact
     private ?OdooSentContact $odooSentContact = null;
 
     #[ORM\Column]
-    private ?string $tag = null;
+    private ?int $tag_id = null;
 
     public function getId(): ?int
     {
@@ -104,15 +104,15 @@ class OdooContact
         return $this;
     }
 
-    public function setTag(string $tag): self
+    public function setTagId(int $tag_id): self
     {
-        $this->tag = $tag;
+        $this->tag_id = $tag_id;
 
         return $this;
     }
 
-    public function getTag(): string
+    public function getTagId(): ?int
     {
-        return $this->tag;
+        return $this->tag_id;
     }
 }
