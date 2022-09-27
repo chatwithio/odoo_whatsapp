@@ -78,39 +78,8 @@ class OdooSendWhatsappCommand extends Command
                                 $odooContact = new OdooContact();
                             }
 
-                            $categoryId = $contact['category_id'][0];
-
-                            // status has been changed
-                            if ($categoryId !== $odooContact->getTagId()) {
-                                // query to fetch tags against the contact
-                                $tag = $client->search_read(
-                                    'res.partner.category',
-                                    [['id', '=', $categoryId]],
-                                    ['name']
-                                );
-
-                                $odooContact->setTagId($categoryId); // update the db
-
-                                // send message status has been update
-                                $updateStatusResponse = $this->messageService->sendWhatsApp(
-                                    $mobile,
-                                    [$tag[0]['name']],
-                                    $_ENV['WHATSAPP_TEMPLATE_ODOO_STATUS'],
-                                    $_ENV['WHATSAPP_TEMPLATE_LANGUAGE'],
-                                    $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
-                                );
-
-                                if ($updateStatusResponse) {
-                                    $io->success(
-                                        'Update status message has been sent successfully to ' .
-                                        $odooContact->getName() . ' (' . $mobile . ')'
-                                    );
-                                } else {
-                                    $io->error(
-                                        'Update status message has was not sent successfully to '
-                                        . $odooContact->getName() . ' (' . $mobile . ')'
-                                    );
-                                }
+                            if (!empty($contact['category_id'])) {
+                                $odooContact->setTagId($contact['category_id'][0]);
                             }
 
                             $odooContact->setOdooBusiness($odooBusiness);
@@ -151,6 +120,43 @@ class OdooSendWhatsappCommand extends Command
                                 }
                             } else {
                                 $io->warning('Already sent SMS to ' . $odooContact->getName() . ' (' . $mobile . ')');
+
+                                if (!empty($contact['category_id'])) {
+                                    $categoryId = $contact['category_id'][0];
+
+                                    // status has been changed
+                                    if ($categoryId !== $odooContact->getTagId()) {
+                                        // query to fetch tags against the contact
+                                        $tags = $client->search_read(
+                                            'res.partner.category',
+                                            [['id', '=', $categoryId]],
+                                            ['name']
+                                        );
+
+                                        $odooContact->setTagId($categoryId); // update the db
+
+                                        // send message status has been update
+                                        $updateStatusResponse = $this->messageService->sendWhatsApp(
+                                            $mobile,
+                                            [$tags[0]['name']],
+                                            $_ENV['WHATSAPP_TEMPLATE_ODOO_STATUS'],
+                                            $_ENV['WHATSAPP_TEMPLATE_LANGUAGE'],
+                                            $_ENV['WHATSAPP_TEMPLATE_NAMESPACE']
+                                        );
+
+                                        if ($updateStatusResponse) {
+                                            $io->success(
+                                                'Update status message has been sent successfully to ' .
+                                                $odooContact->getName() . ' (' . $mobile . ')'
+                                            );
+                                        } else {
+                                            $io->error(
+                                                'Update status message has was not sent successfully to '
+                                                . $odooContact->getName() . ' (' . $mobile . ')'
+                                            );
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
