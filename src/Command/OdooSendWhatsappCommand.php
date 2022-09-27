@@ -65,7 +65,7 @@ class OdooSendWhatsappCommand extends Command
                 $contacts = $client->search_read(
                     'res.partner',
                     [['write_date', '>', date('Y-m-d H:i:s', strtotime('-1 week'))]],
-                    ['name', 'mobile', 'write_date', 'category_id']
+                    ['id', 'name', 'mobile', 'write_date', 'category_id']
                 );
 
                 if ($contacts) {
