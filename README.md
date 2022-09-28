@@ -23,6 +23,7 @@ symfony server:start -d
 WHATSAPP_TEMPLATE_NAME=
 WHATSAPP_TEMPLATE_LANGUAGE=
 WHATSAPP_TEMPLATE_NAMESPACE=
+WHATSAPP_TEMPLATE_ODOO_STATUS=
 ```
 
 - ### Using the odoo business to send the whatsapp message
@@ -44,6 +45,7 @@ WHATSAPP_TEMPLATE_NAMESPACE=
       php bin/console odoo:send-whatsapp
       ```
     - Once the contacts have been retrieved, and the message has been sent, we can see the list of contacts in the
-      `odoo_contact` table and list of recipients from those contacts can been seen `odoo_sent_contact` table. 
+      `odoo_contact` table and list of recipients from those contacts can be seen `odoo_sent_contact` table. 
+    - The `status change message` is sent to the contact when the status has changed.
 
 Create your account at tochat.be and get support and your whatsapp api.
