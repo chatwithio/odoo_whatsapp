@@ -45,7 +45,11 @@ WHATSAPP_TEMPLATE_ODOO_STATUS=
       php bin/console odoo:send-whatsapp
       ```
     - Once the contacts have been retrieved, and the message has been sent, we can see the list of contacts in the
-      `odoo_contact` table and list of recipients from those contacts can be seen `odoo_sent_contact` table. 
-    - The `status change message` is sent to the contact when the status has changed.
+      `odoo_contact` table and list of recipients from those contacts can be seen `odoo_sent_contact` table.
+- ### Sending the message on status update
+    - To test out how the user can get the status update message on WhatsApp, we need to change `tags field` against a contact
+      in the Odoo Business Dashboard.
+    - If this is a new contact registered to our application the status message will not get sent.
+    - The `status change message` is sent to the already saved contact when the status has changed.
 
 Create your account at tochat.be and get support and your whatsapp api.
